@@ -7,9 +7,10 @@ import argparse
 import nomadnet
 
 
-def program_setup(configdir, rnsconfigdir, daemon, console):
+def program_setup(configdir, logfile, rnsconfigdir, daemon, console):
     app = nomadnet.NomadNetworkApp(
         configdir = configdir,
+        logfile = logfile,
         rnsconfigdir = rnsconfigdir,
         daemon = daemon,
         force_console = console,
@@ -19,6 +20,7 @@ def main():
     try:
         parser = argparse.ArgumentParser(description="Nomad Network Client")
         parser.add_argument("--config", action="store", default=None, help="path to alternative Nomad Network config directory", type=str)
+        parser.add_argument("--logfile", action="store", default=None, help="path to alternative Nomad Network logfile", type=str)
         parser.add_argument("--rnsconfig", action="store", default=None, help="path to alternative Reticulum config directory", type=str)
         parser.add_argument("-t", "--textui", action="store_true", default=False, help="run Nomad Network in text-UI mode")
         parser.add_argument("-d", "--daemon", action="store_true", default=False, help="run Nomad Network in daemon mode")
@@ -31,6 +33,11 @@ def main():
             configarg = args.config
         else:
             configarg = None
+
+        if args.logfile:
+            logfilearg = args.logfile
+        else:
+            logfilearg = None
 
         if args.rnsconfig:
             rnsconfigarg = args.rnsconfig
@@ -48,7 +55,7 @@ def main():
         if args.textui:
             daemon = False
 
-        program_setup(configarg, rnsconfigarg, daemon, console)
+        program_setup(configarg, logfilearg, rnsconfigarg, daemon, console)
 
     except KeyboardInterrupt:
         print("")

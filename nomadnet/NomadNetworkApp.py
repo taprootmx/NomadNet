@@ -71,7 +71,7 @@ class NomadNetworkApp:
         if issubclass(e_type, KeyboardInterrupt):
             sys.__excepthook__(e_type, e_value, e_traceback)
 
-    def __init__(self, configdir = None, rnsconfigdir = None, daemon = False, force_console = False):
+    def __init__(self, configdir = None, logfile = None, rnsconfigdir = None, daemon = False, force_console = False):
         self.version       = __version__
         self.enable_client = False
         self.enable_node   = False
@@ -92,11 +92,12 @@ class NomadNetworkApp:
         if NomadNetworkApp._shared_instance == None:
             NomadNetworkApp._shared_instance = self
 
-        self.rns = RNS.Reticulum(configdir = rnsconfigdir)
+        self.rns = RNS.Reticulum(configdir = rnsconfigdir, logfile = logfile)
 
         self.configpath        = self.configdir+"/config"
         self.ignoredpath       = self.configdir+"/ignored"
-        self.logfilepath       = self.configdir+"/logfile"
+        if logfile is None:
+            self.logfilepath       = self.configdir+"/logfile"
         self.errorfilepath     = self.configdir+"/errors"
         self.pnannouncedpath   = self.configdir+"/pnannounced"
         self.storagepath       = self.configdir+"/storage"
